@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+<head>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="src/css/bootstrap-formz.css">
+	<script type="text/javascript" src="src/js/bootstrap-formz.js"></script>
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+<script>
+	
+	var data = {
+		default: {
+			columns: ["col-sm-4", "col-sm-8"]
+		},
+		fields: [
+			{
+				name: "firstname",
+				label: "Firstname",
+				type: "text"
+			},
+			{
+				name: "lastname",
+				label: "Lastname",
+				type: "text"
+			},
+			{
+				name: "lang",
+				label: "Language",
+				type: "select",
+				options: ["English", "Spanish", "Russian", "French", "Portuguese", "Japanese"]
+			},
+			{
+				type: "button",
+				class: "center-block btn-success",
+				value: "Submit this form"
+			}
+		]
+	};
+
+	var formz = new BootstrapFormz(data);
+	document.write(formz.render());
+</script>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

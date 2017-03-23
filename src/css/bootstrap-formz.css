@@ -1,0 +1,193 @@
+
+
+/* general */
+
+form .left {
+    float: left;
+}
+
+form .right {
+    float: right;
+}
+
+
+/* Form */
+
+.form-horizontal .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-bottom: 9px;
+    padding-top: 9px;
+    margin-bottom: 0px;
+}
+
+
+/* tag field */
+
+.tag.label.label-info {
+    font-size: 13px;
+}
+
+.bootstrap-tagsinput {
+    width: 100%;
+    line-height: 27px;
+    margin-bottom: 0px;
+}
+
+.label-info {
+    background-color: #337ab7;
+}
+
+
+/* image field */
+
+.preview-wrapper .btn {
+    margin-bottom: 6px;
+    height: auto;
+}
+
+.img-rounded.preview {
+    max-width: 75%;
+    max-height: 75%;
+    margin-bottom: 6px;
+    float: left;
+    margin-right: 12px;
+    position: relative;
+    border: 1px solid #ccc;
+    background-color: transparent;
+}
+
+.img-rounded.preview-show {
+    cursor: pointer;
+}
+
+.img-rounded.preview:hover {
+    background-color: #666;
+}
+
+.img-rounded.preview .feedback {
+    display: none;
+}
+
+.preview-wrapper.deleted .feedback {
+    position: absolute;
+    top: 15px;
+    left: 30px;
+    width: 0px;
+    height: 0px;
+    content: " ";
+    display: block;
+}
+
+.preview-wrapper.deleted .feedback::after {
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 100px;
+    height: 100px;
+    content: "\e014";
+    color: #f00;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.preview-wrapper.deleted .img-rounded.preview {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.preview-wrapper .change, .preview-wrapper .delete, .preview-wrapper .restore  {
+    clear: right;
+    float: right;
+}
+
+
+/* Currency field */
+
+form input.currency {
+    text-align: right;
+}
+
+
+form .input-group[class*="col-"] {
+    float: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+form .required {
+    font-size: 18px;
+    color: #f00;
+    width: 30px;
+}
+
+form .checkbox {
+    margin-right: 12px;
+}
+
+
+
+/* image preview */
+
+div.image-show-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+
+div.image-show-preview .overlay {
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 0;
+    cursor: pointer;
+}
+
+div.image-show-preview .content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 100;
+    cursor: pointer;
+}
+
+div.image-show-preview .content .image {
+    width: auto;
+    height: auto;
+    margin: auto;
+    z-index: 1000;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+div.image-show-preview .content .image img {
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    cursor: pointer;
+    width: auto;
+    height: auto;   
+}
+
