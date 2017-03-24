@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="en-EN">
+
 <head>
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="src/css/bootstrap-formz.css">
 	<script type="text/javascript" src="src/js/bootstrap-formz.js"></script>
-</head>
-<body>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
+	<style>
+		h2 {
+			color: #666;
+			margin-top: 6px;
+		}
+		.row {
+			border-radius: 12px;
+			background-color: #f0f0f3;
+			border: 2px solid #333;
+			padding: 10px;
+			margin-top: 24px;
+		}
+	</style>
+</head>
+
+<body>
 	<div class="container">
+		
+		<h1>Bootstrap Formz examples</h1>
+
 		<div class="row">
+			<h2>Simple inputs</h1>
 			<div class="col-sm-12">
 <script>
-	
 	var data = {
 		default: {
 			columns: ["col-sm-4", "col-sm-8"]
 		},
 		fields: [
 			{
-				name: "firstname",
-				label: "Firstname",
-				type: "text"
-			},
-			{
-				name: "lastname",
-				label: "Lastname",
+				name: "name",
+				label: "Firstname and lastname",
 				type: "text"
 			},
 			{
@@ -34,9 +48,43 @@
 				options: ["English", "Spanish", "Russian", "French", "Portuguese", "Japanese"]
 			},
 			{
+				name: "message",
+				label: "Your message",
+				type: "textarea"
+			},
+			{
+				name: "file", 
+				label: "Your file", 
+				type: "file" 
+			},
+			{
+				name: "pwd", 
+				label: "Password", 
+				type: "password" 
+			},
+			{
+				label: "Your age",
+				type: "radio",
+				name: "age",
+				options: ["0-12", "12-18", "18-24", "24-35", "36-50", "50-75", "+75"]
+			},
+			{
+				label: 'Contact by',
+				type: 'checkbox',
+				options: ['Mail', 'Phone', 'SMS', 'Smoke signals']
+			},
+			{
+				name: "cocktail",
+				label: "Favorite cocktail",
+				type: "select",
+				options: ["Margarita", "Mojito", "Manhattan", "Cosmopolitan", "Bloody mary", "Pina colada", "Daiquiri", "Irish coffee", "Tequila sunrise"],
+				rows: 5
+			},
+			{
 				type: "button",
 				class: "center-block btn-success",
-				value: "Submit this form"
+				value: "Submit this form",
+				columns: ["col-sm-12"]
 			}
 		]
 	};
@@ -46,6 +94,130 @@
 </script>
 			</div>
 		</div>
+
+		<div class="row">
+			<h2>Input values</h1>
+			<div class="col-sm-12">
+<script>
+	var data = {
+		default: {
+			columns: ["col-sm-4", "col-sm-8"]
+		},
+		fields: [
+			{
+				name: "example",
+				label: "Example text",
+				type: "text",
+				value: "This is a simple text"
+			},
+			{
+				name: "things",
+				label: "Things to do",
+				type: "select",
+				options: ["Get a tatoo", "Survive", "Watch a movie", "Buy a cat", "Get drunk", "Sleep"],
+				value: "Watch a movie"
+			},
+			{
+				name: "example2",
+				label: "Do you like this form?",
+				type: "checkbox",
+				text: "Yes of course",
+				value: true
+			},
+			{
+				name: "thing",
+				label: "Thing to do",
+				type: "radio",
+				options: ["Get a tatoo", "Survive", "Watch a movie", "Buy a cat", "Get drunk", "Sleep"],
+				value: "Watch a movie"
+			},
+			{
+				name: "checklist",
+				label: "Bullshit checklist",
+				type: "checkbox",
+				options: ["I agree to terme and conditions", "Is this real life?", "I like napping at work"],
+				value: ["Is this real life?", "I like napping at work"]
+			},
+			{
+				name: "textarea",
+				label: "Lorem ipsum",
+				type: "textarea",
+				rows: 4,
+				value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+			}
+		]
+	};
+
+	var formz = new BootstrapFormz(data);
+	document.write(formz.render());
+	//formz.ready();
+
+</script>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<h2>Special input</h1>
+			<div class="col-sm-12">
+<script>
+	var data = {
+		default: {
+			columns: ["col-sm-4", "col-sm-8"]
+		},
+		fields: [
+			{
+				name: "image1",
+				label: "Image example",
+				type: "image",
+				url: "image/cat.jpg"
+			},
+			{
+				name: "things",
+				label: "Things to do",
+				type: "select",
+				options: ["Get a tatoo", "Survive", "Watch a movie", "Buy a cat", "Get drunk", "Sleep"],
+				value: "Watch a movie"
+			},
+			{
+				name: "example2",
+				label: "Do you like this form?",
+				type: "checkbox",
+				text: "Yes of course",
+				value: true
+			},
+			{
+				name: "thing",
+				label: "Thing to do",
+				type: "radio",
+				options: ["Get a tatoo", "Survive", "Watch a movie", "Buy a cat", "Get drunk", "Sleep"],
+				value: "Watch a movie"
+			},
+			{
+				name: "checklist",
+				label: "Bullshit checklist",
+				type: "checkbox",
+				options: ["I agree to terme and conditions", "Is this real life?", "I like napping at work"],
+				value: ["Is this real life?", "I like napping at work"]
+			},
+			{
+				name: "textarea",
+				label: "Lorem ipsum",
+				type: "textarea",
+				rows: 4,
+				value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
+			}
+		]
+	};
+
+	var formz = new BootstrapFormz(data);
+	document.write(formz.render());
+</script>
+			</div>
+		</div>
+
+
+
 	</div>
 </body>
 </html>
