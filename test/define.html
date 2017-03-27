@@ -41,6 +41,14 @@
 				type: "text"
 			},
 			{
+				name: "text2",
+				label: "Text with custom ready function",
+				type: "text",
+				ready: function(event) {
+					event.target.value = "Ok";
+				}
+			},
+			{
 				name: "password",
 				label: "Password",
 				type: "password"
@@ -63,10 +71,26 @@
 				options: ["One", "Two", "Three", "Four"]
 			},
 			{
+				name: "radio2",
+				label: "Different values and texts",
+				type: "radio",
+				options: ["1|One", "2|Two", "3|Three", "4|Four"]
+			},
+			{
 				name: "checkbox",
-				label: "Checkbox",
+				label: "Simple checkbox",
 				type: "checkbox",
-				value: "I agree to the terms and conditions"
+				value: "true",
+				text: "I agree to the terms and conditions",
+				checked: true
+			},
+			{
+				name: "checkbox2",
+				label: "Multiple checkbox",
+				type: "checkbox",
+//				value: "2",
+				value: ["1", "3"],
+				options: ["1|Human", "2|Velociraptor", "3|Apache helicopter", "0|Other"]
 			},
 			{
 				name: "textarea",
@@ -128,13 +152,26 @@
 			{
 				name: "image2",
 				type: "image",
-				label: "Image with just a preview",
+				label: "Image with no options",
 				url: "../image/cat.jpg",
 				change: false,
-				delete: false
+				delete: false,
+				preview: false
 			},
 			{
 				name: "image3",
+				type: "image",
+				label: "Image with custom preview function",
+				url: "../image/cat.jpg",
+				change: false,
+				delete: false,
+				preview_click: function() {
+					alert('Custom preview function');
+					return false;
+				}
+			},
+			{
+				name: "image4",
 				type: "image",
 				label: "Image without preview",
 			},

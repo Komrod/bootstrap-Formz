@@ -18,7 +18,7 @@ function BootstrapFormz(form) {
 
     document.addEventListener("DOMContentLoaded", function(event) {
         setTimeout(function() {
-            core.ready();
+            core.ready(event);
         }, 1);
     });
 }
@@ -128,18 +128,48 @@ BootstrapFormz.prototype.defineDefaultFields = function() {
     });
 
     this.defineField('checkbox', {
+        init: function() {
+            this.label = this.label || "";
+            this.class = this.class || "";
+            this.required = this.required || false;
+            this.name = this.name || 'field_text_'+this.core.randomString(16);
+            this.value = this.value || this.default || "";
+            this.placeholder = this.placeholder || "";
+            this.text = this.text || "";
+        },
         renderInput: function() {
             var str = "";
-
-            str += "<div class=\"checkbox "+this.class+"\">\n";
-            str += "<label>\n";
-            str += "<input type=\"checkbox\" id=\""+this.name+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
-            if (this.disabled) str += " disabled";
-            if (this.checked) str += " checked";
-            str += "> "+this.value+"\n";
-            str += "</label>\n";
-            str += "</div>\n";
-
+            if (this.options) {
+                for (var t=0; t<this.options.length; t++) {
+                    var value = this.options[t];
+                    var text = this.options[t];
+                    var arr = value.split("|");
+                    if (arr.length>1) {
+                        value = arr[0];
+                        text = arr[1];
+                    }
+                    str += "<div class=\"checkbox "+this.class+"\">\n";
+                    str += "<label>\n";
+                    str += "<input type=\"checkbox\" id=\""+this.name+"-"+value+"\" name=\""+this.name+"[]\" value=\""+value+"\"";
+                    if (this.disabled) str += " disabled";
+console.log(value, this.value, this.value.indexOf(value));
+                    if (this.value == value || (this.core.isArray(this.value) && this.value.indexOf(value) >= 0)) {
+                        str += " checked";
+                    }
+                    str += "> "+text+"\n";
+                    str += "</label>\n";
+                    str += "</div>\n";
+                }
+            } else {
+                str += "<div class=\"checkbox "+this.class+"\">\n";
+                str += "<label>\n";
+                str += "<input type=\"checkbox\" id=\""+this.name+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+                if (this.disabled) str += " disabled";
+                if (this.checked) str += " checked";
+                str += "> "+this.text+"\n";
+                str += "</label>\n";
+                str += "</div>\n";
+            }
             return str;
         }
     });
@@ -677,17 +707,21 @@ BootstrapFormz.prototype.randomString = function(length) {
     return str;
 };
 
+
 BootstrapFormz.prototype.isString = function(object) {
     return (typeof object === "string");
 };
+
 
 BootstrapFormz.prototype.isArray = function(object) {
     return Object.prototype.toString.call(object) === "[object Array]";
 };
 
+
 BootstrapFormz.prototype.isObject = function(object) {
     return object !== null && typeof object === "object";
 };
+
 
 BootstrapFormz.prototype.getColumn = function(field, num) {
     if (field.columns && this.isString(field.columns)) return field.columns;
@@ -697,14 +731,17 @@ BootstrapFormz.prototype.getColumn = function(field, num) {
     return '';
 };
 
+
 BootstrapFormz.prototype.xtrim = function(str) {
     return (str + '').replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, '').replace(/\s+/g, ' ');
 };
+
 
 BootstrapFormz.prototype.hasClass = function(element, classname) {
     if (!element.className || !element.className.indexOf) return false;
     return element.className.indexOf(classname) != -1;
 };
+
 
 BootstrapFormz.prototype.addClass = function(element, classname) {
     if (!element.className) return this;
@@ -712,6 +749,7 @@ BootstrapFormz.prototype.addClass = function(element, classname) {
     element.className = this.xtrim(element.className+" "+classname);
     return this;
 };
+
 
 BootstrapFormz.prototype.removeClass = function(element, classname) {
     if (!element.className) return this;
@@ -726,10 +764,13 @@ BootstrapFormz.prototype.removeClass = function(element, classname) {
 *************************************************************/
 
 
-BootstrapFormz.prototype.ready = function() {
+BootstrapFormz.prototype.ready = function(event) {
     if (this.form && this.form.fields && this.form.fields.length) {
         for (var t=0; t<this.form.fields.length; t++) {
-            if (this.form.fields[t] && this.form.fields[t].ready) this.form.fields[t].ready();
+            var new_event = {
+                target: event.target = document.getElementById(this.form.fields[t].name)
+            };
+            if (this.form.fields[t] && this.form.fields[t].ready) this.form.fields[t].ready(new_event);
         }
     }
 /*
