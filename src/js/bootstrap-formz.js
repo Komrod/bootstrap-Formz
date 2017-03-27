@@ -27,6 +27,17 @@ function BootstrapFormz(form) {
 
 BootstrapFormz.prototype.defineDefaultFields = function() {
 
+    this.defineField('empty', {
+        init: function() {
+        },
+        renderInput: function() {
+            return "";
+        },
+        renderField: function() {
+            return "";
+        }
+    });
+
     this.defineField('text', {
         renderInput: function() {
             var str = "";
@@ -152,7 +163,6 @@ BootstrapFormz.prototype.defineDefaultFields = function() {
                     str += "<label>\n";
                     str += "<input type=\"checkbox\" id=\""+this.name+"-"+value+"\" name=\""+this.name+"[]\" value=\""+value+"\"";
                     if (this.disabled) str += " disabled";
-console.log(value, this.value, this.value.indexOf(value));
                     if (this.value == value || (this.core.isArray(this.value) && this.value.indexOf(value) >= 0)) {
                         str += " checked";
                     }
@@ -302,7 +312,7 @@ console.log(value, this.value, this.value.indexOf(value));
         renderField: function() {
             return this.renderInput();
         },
-        renderCell: function(cssClass) {
+        renderColumn: function(cssClass) {
             this.class = cssClass + ' ' + this.class;
             return this.renderInput();
         },
@@ -326,11 +336,11 @@ console.log(value, this.value, this.value.indexOf(value));
             if (this.label) {
                 str += "<div class=\"form-group inline\">";
                 str += this.core.renderLabel(this);
-                str += this.renderCell(this.core.getColumn(this, 1));
+                str += this.renderColumn(this.core.getColumn(this, 1));
                 str += "</div>";
             } else {
                 str += "<div class=\"form-group inline\">";
-                str += this.renderCell(this.core.getColumn(this, 0));
+                str += this.renderColumn(this.core.getColumn(this, 0));
                 str += "</div>";
             }
             
@@ -350,7 +360,7 @@ console.log(value, this.value, this.value.indexOf(value));
         }
     });
 
-    this.defineField('cell', {
+    this.defineField('column', {
         renderField: function() {
             var str = "";
             str += "<div class=\"form-group\">";
@@ -364,7 +374,7 @@ console.log(value, this.value, this.value.indexOf(value));
             if (this.list) {
                 for (var t=0; t<this.list.length; t++) {
                     this.list[t] = this.core.createField(this.list[t]);
-                    str += this.list[t].renderCell(this.core.getColumn(this, t));
+                    str += this.list[t].renderColumn(this.core.getColumn(this, t));
                 }
             }
 
@@ -532,13 +542,13 @@ BootstrapFormz.prototype.defaultFieldFunctions = function(field) {
             var str = "";
             str += "<div class=\"form-group\">";
             str += this.core.renderLabel(this);
-            str += this.renderCell(this.core.getColumn(this, 1));
+            str += this.renderColumn(this.core.getColumn(this, 1));
             str += "</div>";
             return str;
         };
     }
-    if (!field.renderCell) {
-        field.renderCell = function(cssClass) {
+    if (!field.renderColumn) {
+        field.renderColumn = function(cssClass) {
             var str = "";
             str += "<div class=\""+cssClass+"\">\n";
             str += this.renderInput();
@@ -619,7 +629,14 @@ BootstrapFormz.prototype.render = function() {
     if (this.form, this.form.fields) {
         for (var t=0; t<this.form.fields.length; t++) {
             if (this.form.fields[t]) {
-                if (!this.form.fields[t].type) this.form.fields[t].type = "text";
+                if (this.isArray(this.form.fields[t])) {
+                    this.form.fields[t] = {
+                        type: "inline",
+                        list: this.form.fields[t]
+                    };
+                } else {
+                    if (!this.form.fields[t].type) this.form.fields[t].type = "empty";
+                }
                 this.form.fields[t] = this.createField(this.form.fields[t]);
                 str += this.renderField(this.form.fields[t]);
             }
