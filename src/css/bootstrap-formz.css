@@ -21,6 +21,12 @@ form .right {
     margin-bottom: 0px;
 }
 
+.form-group.inline .form-control, .form-group.inline .checkbox{
+   width: auto;
+   float:left;
+   margin-right: 5px;
+}
+
 
 /* tag field */
 
@@ -41,14 +47,20 @@ form .right {
 
 /* image field */
 
-.preview-wrapper .btn {
-    margin-bottom: 6px;
-    height: auto;
+.field-type-image {
+    width: 100%;
+    height: 100%;
 }
 
-.img-rounded.preview {
-    max-width: 75%;
-    max-height: 75%;
+.field-type-image .btn {
+    margin-bottom: 6px;
+    height: 100%;
+    width: 100%;
+}
+
+.field-type-image .img-rounded.preview {
+    max-width: 100%;
+    max-height: 100%;
     margin-bottom: 6px;
     float: left;
     margin-right: 12px;
@@ -57,19 +69,19 @@ form .right {
     background-color: transparent;
 }
 
-.img-rounded.preview-show {
+.field-type-image .img-rounded.preview-show {
     cursor: pointer;
 }
 
-.img-rounded.preview:hover {
+.field-type-image .img-rounded.preview:hover {
     background-color: #666;
 }
 
-.img-rounded.preview .feedback {
+.field-type-image .img-rounded.preview .feedback {
     display: none;
 }
 
-.preview-wrapper.deleted .feedback {
+.field-type-image.deleted .feedback {
     position: absolute;
     top: 15px;
     left: 30px;
@@ -79,7 +91,7 @@ form .right {
     display: block;
 }
 
-.preview-wrapper.deleted .feedback::after {
+.field-type-image.deleted .feedback::after {
     display: inline-block;
     font-family: 'Glyphicons Halflings';
     font-style: normal;
@@ -95,15 +107,21 @@ form .right {
     font-size: 24px;
 }
 
-.preview-wrapper.deleted .img-rounded.preview {
+.field-type-image.deleted .img-rounded.preview {
     opacity: 0.5;
     cursor: pointer;
 }
 
-.preview-wrapper .change, .preview-wrapper .delete, .preview-wrapper .restore  {
+.field-type-image .change, .field-type-image .delete, .field-type-image .restore  {
     clear: right;
     float: right;
 }
+
+.field-type-image div {
+    padding-right: 15px;
+    padding-left: 0px;
+}
+
 
 
 /* Currency field */
@@ -133,7 +151,7 @@ form .checkbox {
 
 /* image preview */
 
-div.image-show-preview {
+div.image-preview-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -146,21 +164,8 @@ div.image-show-preview {
 }
 
 
-div.image-show-preview .overlay {
+div.image-preview-overlay .overlay {
     background-color: rgba(0,0,0,0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    z-index: 0;
-    cursor: pointer;
-}
-
-div.image-show-preview .content {
     position: fixed;
     top: 0;
     left: 0;
@@ -173,18 +178,30 @@ div.image-show-preview .content {
     cursor: pointer;
 }
 
-div.image-show-preview .content .image {
+div.image-preview-overlay .content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+div.image-preview-overlay .content .image {
     width: auto;
     height: auto;
     margin: auto;
-    z-index: 1000;
+    z-index: 10000;
     cursor: pointer;
-    margin-top: 10px;
 }
 
-div.image-show-preview .content .image img {
-    max-width: 90%;
-    max-height: 90%;
+div.image-preview-overlay .content .image img {
+    max-width: 100%;
+    max-height: 100%;
     margin: auto;
     cursor: pointer;
     width: auto;

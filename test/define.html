@@ -25,7 +25,7 @@
 <body>
 	<div class="container">
 		
-		<h1>Bootstrap define test</h1>
+		<h1>Bootstrap Formz define test</h1>
 
 		<div class="row">
 			<div class="col-sm-12">
@@ -33,72 +33,72 @@
 
 
 	var data = {
-		default: {
-			columns: ["col-sm-4", "col-sm-8"]
-		},
+		columns: ["col-sm-4", "col-sm-8"],
 		fields: [
 			{
-				name: "name",
-				label: "Firstname and lastname",
-				type: "text"
-			},
-		]
-		
-/*		default: {
-			columns: ["col-sm-4", "col-sm-8"]
-		},
-		fields: [
-			{
-				name: "name",
+				name: "text",
 				label: "Firstname and lastname",
 				type: "text"
 			},
 			{
-				name: "lang",
-				label: "Language",
+				name: "password",
+				label: "Password",
+				type: "password"
+			},
+			{
+				name: "file",
+				label: "Your file",
+				type: "file"
+			},
+			{
+				name: "select",
+				label: "Select a number",
 				type: "select",
-				options: ["English", "Spanish", "Russian", "French", "Portuguese", "Japanese"]
+				options: ["One", "Two", "Three", "Four"]
 			},
 			{
-				name: "message",
-				label: "Your message",
-				type: "textarea"
-			},
-			{
-				name: "file", 
-				label: "Your file", 
-				type: "file" 
-			},
-			{
-				name: "pwd", 
-				label: "Password", 
-				type: "password" 
-			},
-			{
-				label: "Your age",
+				name: "radio",
+				label: "Select a number",
 				type: "radio",
-				name: "age",
-				options: ["0-12", "12-18", "18-24", "24-35", "36-50", "50-75", "+75"]
+				options: ["One", "Two", "Three", "Four"]
 			},
 			{
-				label: 'Contact by',
-				type: 'checkbox',
-				options: ['Mail', 'Phone', 'SMS', 'Smoke signals']
+				name: "checkbox",
+				label: "Checkbox",
+				type: "checkbox",
+				value: "I agree to the terms and conditions"
 			},
 			{
-				name: "cocktail",
-				label: "Favorite cocktail",
-				type: "select",
-				options: ["Margarita", "Mojito", "Manhattan", "Cosmopolitan", "Bloody mary", "Pina colada", "Daiquiri", "Irish coffee", "Tequila sunrise"],
-				rows: 5
+				name: "textarea",
+				label: "Textarea",
+				type: "textarea",
+				value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+			},
+			{
+				name: "button",
+				label: "Button",
+				type: "button",
+				value: "Dummy button",
+				class: "btn-success"
+			},
+			{
+				name: "email",
+				label: "Your email",
+				type: "email"
+			},
+			{
+				name: "currency",
+				label: "Give me money",
+				type: "currency",
+				columns: ["col-sm-4 col-xs-12", "col-sm-3 col-xs-6"]
 			},
 			{
 				type: "button",
 				class: "center-block btn-success",
-				value: "Submit this form",
-				columns: ["col-sm-12"]
+				value: "Button centered in one cell",
+				columns: "col-sm-12"
 			}
-		]*/
+		]
 	};
 
 	var formz = new BootstrapFormz(data);
@@ -106,6 +106,136 @@
 </script>
 			</div>
 		</div>
+
+
+
+
+
+		<div class="row">
+			<div class="col-sm-12">
+<script>
+
+
+	var data = {
+		columns: ["col-sm-4", "col-sm-8"],
+		fields: [
+			{
+				name: "image1",
+				type: "image",
+				label: "Image with full controls",
+				url: "../image/cat.jpg"
+			},
+			{
+				name: "image2",
+				type: "image",
+				label: "Image with just a preview",
+				url: "../image/cat.jpg",
+				change: false,
+				delete: false
+			},
+			{
+				name: "image3",
+				type: "image",
+				label: "Image without preview",
+			},
+			{
+				name: "inline",
+				label: "Inline with label",
+				type: "inline",
+				list: [
+					{
+						name: "checkbox2",
+						type: "checkbox",
+						value: "Checkbox"
+					},
+					{
+						name: "test2",
+						type: "text",
+						value: "Lorem ipsum"
+					},
+					{
+						name: "button",
+						type: "button",
+						value: "Dummy button",
+						class: "btn-success"
+					}
+				]
+			},
+			{
+				name: "inline2",
+				type: "inline",
+				columns: "col-sm-12",
+				list: [
+					{
+						type: "checkbox",
+						value: "Inline without label"
+					},
+					{
+						type: "text",
+						value: "Lorem ipsum"
+					},
+					{
+						type: "button",
+						value: "Dummy button",
+						class: "btn-success"
+					}
+				]
+			},
+			[
+				{
+					type: "label",
+					label: "Inline from an array"
+				},
+				{
+					type: "text"
+				},
+				{
+					type: "button",
+					value: "Send"
+				}
+			],
+			{
+				type: "cell",
+				columns: ['col-sm-4', 'col-sm-2', 'col-sm-2', 'col-sm-2'],
+				list: [
+					{
+						name: "label2",
+						type: "label",
+						value: "Cell inputs",
+						class: "control-label"
+					},
+					{
+						name: "button",
+						type: "button",
+						value: "Dummy button",
+						class: "btn-success"
+					},
+					{
+						name: "button",
+						type: "button",
+						value: "Dummy button",
+						class: "btn-warning"
+					},
+					{
+						name: "button",
+						type: "button",
+						value: "Dummy button",
+						class: "btn-danger"
+					},
+				]
+			}
+		]
+	};
+
+	var formz = new BootstrapFormz(data);
+	document.write(formz.render());
+</script>
+			</div>
+		</div>
+
+<br/>
+<br/>
+<br/>
 
 
 

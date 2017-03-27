@@ -4,8 +4,10 @@
 function BootstrapFormz(form) {
     this.types = {};
     this.form = form;
+    var core = this;
     this.default = {
         columns: ['col-sm-5', 'col-sm-7'],
+        rows: 6,
         name: 'form_'+this.randomString(16),
         class: 'form-horizontal',
         enctype: 'multipart/form-data',
@@ -13,7 +15,12 @@ function BootstrapFormz(form) {
     };
 
     this.defineDefaultFields();
-    this.ready();
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        setTimeout(function() {
+            core.ready();
+        }, 1);
+    });
 }
 
 
@@ -21,54 +28,497 @@ function BootstrapFormz(form) {
 BootstrapFormz.prototype.defineDefaultFields = function() {
 
     this.defineField('text', {
-        init: function() {
-
-        },
-        renderField: function() {
-            var str = "";
-            str += "<div class=\"form-group\">";
-            str += this.renderLabel(this);
-            str += this.renderCell(this.getColumn(1),{})
-            str += "</div>";
-            return str;
-        },
-        renderCell: function(cssClass) {
-            return '';
-        },
         renderInput: function() {
-            return '';
-        },
-        ready: function() {
-            
+            var str = "";
+            str += "<input type=\"text\" class=\"form-control "+this.class;
+            str += "\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+            if (this.disabled) str += " disabled"
+            str += ">\n";
+            return str;
         }
     });
 
-    this.defineField('label', {});
+    this.defineField('password', {
+        renderInput: function() {
+            var str = "";
+            str += "<input type=\"password\" class=\"form-control "+this.class;
+            str += "\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+            if (this.disabled) str += " disabled"
+            str += ">\n";
+            return str;
+        }
+    });
+
+    this.defineField('file', {
+        renderInput: function() {
+            var str = "";
+            str += "<input type=\"file\" class=\"form-control "+this.class;
+            str += "\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+            if (this.disabled) str += " disabled"
+            str += ">\n";
+            return str;
+        }
+    });
+
+    this.defineField('select', {
+        renderInput: function() {
+            var str = "";
+            str += "<select class=\"form-control "+this.class+"\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\"";
+            if (this.multiple) str += " multiple"
+            if (this.disabled) str += " disabled"
+            if (this.rows) str += ' size="'+this.rows+'"'
+            str += ">\n";
+            if (this.options) {
+                var selected = "";
+                for (var u=0; u<this.options.length; u++) {
+                    var arr = this.options[u].split('|');
+                    if (arr.length == 1) {
+                        if (this.value == this.options[u] || this.value.indexOf(this.options[u]) != -1) {
+                            selected = "selected";
+                        } else {
+                            selected = "";
+                        }
+                        str += "<option value=\""+this.options[u]+"\" "+selected+">"+this.options[u]+"</option>\n";
+                    } else {
+                        if (this.value == arr[0] || this.value.indexOf(arr[0]) != -1) {
+                            selected = "selected";
+                        } else {
+                            selected = "";
+                        }
+                        str += "<option value=\""+arr[0]+"\" "+selected+">"+arr[1]+"</option>\n";
+                    }
+                }
+            }
+            str += "</select>\n";
+
+            return str;
+        }
+    });
+
+    this.defineField('radio', {
+        renderInput: function() {
+            var str = "";
+            if (this.core.isString(this.options)) {
+                this.options = [this.options];
+            }
+            for (var t=0; t<this.options.length; t++) {
+                str += "<label class=\"radio-inline "+this.class+"\">\n";
+                var arr = this.options[t].split('|');
+                var value = arr[0];
+                if (arr[1]) {
+                    var text = arr[1];
+                } else {
+                    var text = value;
+                }
+                if (value == this.value) {
+                    selected = 'checked';
+                } else {
+                    selected = '';
+                }
+                str += "<input type=\"radio\" name=\""+this.name+"\" id=\""+this.name+"\" value=\""+value+"\"";
+                if (selected) str += " "+selected;
+                if (this.disabled) str += " disabled"
+                str += ">\n";
+                str += text;
+                str += "</label>\n";
+            }
+
+            return str;
+        }
+    });
+
+    this.defineField('checkbox', {
+        renderInput: function() {
+            var str = "";
+
+            str += "<div class=\"checkbox "+this.class+"\">\n";
+            str += "<label>\n";
+            str += "<input type=\"checkbox\" id=\""+this.name+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+            if (this.disabled) str += " disabled";
+            if (this.checked) str += " checked";
+            str += "> "+this.value+"\n";
+            str += "</label>\n";
+            str += "</div>\n";
+
+            return str;
+        }
+    });
+
+    this.defineField('textarea', {
+        renderInput: function() {
+            var str = "";
+
+            str += "<textarea class=\"form-control "+this.class+"\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" ";
+            if (this.disabled) str += " disabled";
+            var rows = (this.rows || this.core.default.rows || 6);
+            str += " rows=\""+rows+"\"";
+            str += ">";
+            str += this.value+"</textarea>\n";
+
+            return str;
+        }
+    });
+
+    this.defineField('button', {
+        renderInput: function() {
+            var str = "";
+
+            str += "<button class=\"btn "+this.class+"\" id=\""+this.name+"\" name=\""+this.name+"\" ";
+            if (this.disabled) str += " disabled";
+            str += ">";
+            str += this.value+"</button>"+"\n";
+
+            return str;
+        }
+    });
+
+    this.defineField('email', {
+        init: function() {
+            this.label = this.label || "";
+            this.class = this.class || "";
+            this.required = this.required || false;
+            this.name = this.name || 'field_text_'+this.core.randomString(16);
+            this.value = this.value || this.default || "";
+            this.placeholder = this.placeholder || "";
+            this.symbol = this.symbol || "@";
+        },
+        renderInput: function() {
+            var str = "";
+
+            str += "<div class=\"input-group\">\n";
+            str += "<div class=\"input-group-addon\">"+this.symbol+"</div>\n";
+            str += "<input type=\"text\" class=\"form-control email "+this.class+"\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+            if (this.disabled) str += " disabled";
+            str += ">\n";
+            str += "</div>\n";
+
+            return str;
+        },
+        onChange: function(event) {
+            if (event.target) {
+                var value = event.target.value+'';
+                if (value == "") {
+                    var parent = event.target.parentNode;
+                    this.core.removeClass(parent, 'has-error')
+                        .removeClass(parent, 'has-success');
+                    return;
+                }
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                var parent = event.target.parentNode;
+                if (!re.test(value)) {
+                    this.core.addClass(parent, 'has-error')
+                        .removeClass(parent, 'has-success');
+                } else {
+                    this.core.removeClass(parent, 'has-error')
+                        .addClass(parent, 'has-success');
+                }
+            }
+        },
+        ready: function() {
+            var input = document.getElementById(this.name);
+            var field = this;
+            this.onChange({target: input});
+            input.addEventListener('change', function()
+            {
+                field.onChange({target: this});
+            });
+        }
+    });
+
+    this.defineField('currency', {
+        init: function() {
+            this.label = this.label || "";
+            this.class = this.class || "";
+            this.required = this.required || false;
+            this.name = this.name || 'field_text_'+this.core.randomString(16);
+            this.value = this.value || this.default || "";
+            this.placeholder = this.placeholder || "";
+            this.symbol = this.symbol || "$";
+        },
+        renderInput: function() {
+            var str = "";
+
+            str += "<div class=\"input-group\">\n";
+            str += "<div class=\"input-group-addon\">"+this.symbol+"</div>\n";
+            str += "<input type=\"text\" class=\"form-control currency "+this.class+"\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+            if (this.disabled) str += " disabled";
+            str += ">\n";
+            str += "</div>\n";
+
+            return str;
+        },
+        onChange: function(event) {
+            if (event.target) {
+                var value = event.target.value+'';
+                value = value.replace(/\s/gm,'').replace(/[a-zA-Z]/gm,'').replace(/\,/gm,'.');
+                if (value.indexOf('.') == -1) value += '.';
+                value += '00';
+                value = parseFloat(value).toFixed(2);
+                event.target.value = value;
+            }
+        },
+        ready: function() {
+            var input = document.getElementById(this.name);
+            var field = this;
+            this.onChange({target: input});
+            input.addEventListener('change', function()
+            {
+                field.onChange({target: this});
+            });
+        }
+    });
+
+    this.defineField('label', {
+        renderField: function() {
+            return this.renderInput();
+        },
+        renderCell: function(cssClass) {
+            this.class = cssClass + ' ' + this.class;
+            return this.renderInput();
+        },
+        renderInput: function() {
+            var str = "";
+            str += "<label for=\""+this.name+"\" class=\""+this.class+"\">"+this.value;
+            if (this.required) str += "<span class=\"required\">*</span>";
+            str += "</label>\n";
+            return str;
+        }
+    });
+
+    this.defineField('inline', {
+        init: function() {
+            this.class = this.class || "";
+            this.required = this.required || false;
+            this.name = this.name || 'field_text_'+this.core.randomString(16);
+        },
+        renderField: function() {
+            var str = "";
+            if (this.label) {
+                str += "<div class=\"form-group inline\">";
+                str += this.core.renderLabel(this);
+                str += this.renderCell(this.core.getColumn(this, 1));
+                str += "</div>";
+            } else {
+                str += "<div class=\"form-group inline\">";
+                str += this.renderCell(this.core.getColumn(this, 0));
+                str += "</div>";
+            }
+            
+            return str;
+        },
+        renderInput: function() {
+            var str = "";
+
+            if (this.list) {
+                for (var t=0; t<this.list.length; t++) {
+                    this.list[t] = this.core.createField(this.list[t]);
+                    str += this.list[t].renderInput();
+                }
+            }
+
+            return str;
+        }
+    });
+
+    this.defineField('cell', {
+        renderField: function() {
+            var str = "";
+            str += "<div class=\"form-group\">";
+            str += this.renderInput();
+            str += "</div>";
+            return str;
+        },
+        renderInput: function() {
+            var str = "";
+
+            if (this.list) {
+                for (var t=0; t<this.list.length; t++) {
+                    this.list[t] = this.core.createField(this.list[t]);
+                    str += this.list[t].renderCell(this.core.getColumn(this, t));
+                }
+            }
+
+            return str;
+        }
+    });
+
+
+    this.defineField('image', {
+        renderInput: function() {
+            var str = "";
+
+            if (this.url) {
+                str += "<div class=\"field-type-image field-name-"+this.name+"\">\n";
+                str += "<div class=\"col-sm-8\">\n";
+                if (this.preview !== false) {
+                    str += "<img src=\""+this.url+"\" class=\"img-rounded preview preview-show "+this.class+"\" />\n";
+                } else {
+                    str += "<img src=\""+this.url+"\" class=\"img-rounded preview "+this.class+"\" />\n";
+                }
+                str += "<div class=\"feedback\"></div>\n";
+                str += "</div>\n";
+                str += "<div class=\"col-sm-4\">\n";
+                str += "<input type=\"hidden\" class=\"state\" name=\""+this.name+"__state\" value=\"\" />\n";
+                if (this.change !== false) {
+                    str += "<button type=\"button\" class=\"btn btn-info change\">Change</button>\n";
+                }
+                if (this.delete !== false) {
+                    str += "<button type=\"button\" class=\"btn btn-danger delete\">Delete</button>\n";
+                    str += "<button type=\"button\" class=\"btn btn-warning hidden restore\">Restore</button>\n";
+                }
+                str += "</div>\n";
+                if (this.change !== false) {
+                    str += "<input type=\"file\" class=\"form-control hidden col-sm-12\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+                    if (this.disabled) str += " disabled";
+                    str += ">\n";
+                }
+                str += "</div>\n";
+            } else {
+                str += "<input type=\"file\" class=\"form-control\" id=\""+this.name+"\" placeholder=\""+this.placeholder+"\" name=\""+this.name+"\" value=\""+this.value+"\"";
+                if (this.disabled) str += " disabled";
+                str += ">\n";
+            }
+
+            return str;
+        },
+        change_click: function(event) {
+            var div = document.querySelector(".field-name-"+this.field.name);
+            var btn_change = document.querySelector(".field-name-"+this.field.name+" button.change");
+            var btn_delete = document.querySelector(".field-name-"+this.field.name+" button.delete");
+            var btn_restore = document.querySelector(".field-name-"+this.field.name+" button.restore");
+            var state = document.querySelector(".field-name-"+this.field.name+" .state");
+            var input = document.getElementById(this.field.name);
+
+            if (this.field.core.hasClass(input, "hidden")) {
+                this.field.core.removeClass(div, 'deleted');
+                this.field.core.removeClass(input, "hidden");
+                this.field.core.addClass(btn_restore, 'hidden');
+                this.field.core.removeClass(btn_delete, 'hidden');
+                state.value = "changed";
+                input.value = "";
+            } else {
+                this.field.core.removeClass(div, 'deleted');
+                this.field.core.addClass(input, "hidden");
+                this.field.core.addClass(btn_restore, 'hidden');
+                this.field.core.removeClass(btn_delete, 'hidden');
+                state.value = "";
+                input.value = "";
+            }
+        },
+        restore_click: function() {
+            var div = document.querySelector(".field-name-"+this.field.name);
+            var btn_change = document.querySelector(".field-name-"+this.field.name+" button.change");
+            var btn_delete = document.querySelector(".field-name-"+this.field.name+" button.delete");
+            var btn_restore = document.querySelector(".field-name-"+this.field.name+" button.restore");
+            var state = document.querySelector(".field-name-"+this.field.name+" .state");
+            var input = document.getElementById(this.field.name);
+
+            this.field.core.removeClass(div, 'deleted');
+            this.field.core.addClass(btn_restore, 'hidden');
+            this.field.core.removeClass(btn_delete, 'hidden');
+            this.field.core.addClass(input, "hidden");
+            state.value = "";
+            input.value = "";
+        },
+        delete_click: function() {
+            var div = document.querySelector(".field-name-"+this.field.name);
+            var btn_change = document.querySelector(".field-name-"+this.field.name+" button.change");
+            var btn_delete = document.querySelector(".field-name-"+this.field.name+" button.delete");
+            var btn_restore = document.querySelector(".field-name-"+this.field.name+" button.restore");
+            var state = document.querySelector(".field-name-"+this.field.name+" .state");
+            var input = document.getElementById(this.field.name);
+
+            this.field.core.addClass(div, 'deleted');
+            this.field.core.removeClass(btn_restore, 'hidden');
+            this.field.core.addClass(btn_delete, 'hidden');
+            this.field.core.addClass(input, "hidden");
+            state.value = "deleted";
+            input.value = "";
+        },
+        preview_click: function(event) {
+            var html = "<div class=\"content\">"
+                + "<div class=\"close\"></div>"
+                + "<div class=\"image\"><center><img src=\""+event.target.src+"\" /></center></div>"
+                + "</div>"
+                + "<div class=\"overlay\"></div>";
+
+            var div = document.createElement('div');
+            div.className = "image-preview-overlay";
+            div.innerHTML = html;
+            document.body.appendChild(div);
+
+            document.querySelector(".image-preview-overlay").addEventListener("click", function() {
+                var element = document.querySelector(".image-preview-overlay");
+                element.parentNode.removeChild(element);
+            });
+        },
+        ready: function() {
+            var btn_change = document.querySelector(".field-name-"+this.name+" button.change");
+            var btn_delete = document.querySelector(".field-name-"+this.name+" button.delete");
+            var btn_restore = document.querySelector(".field-name-"+this.name+" button.restore");
+            var img = document.querySelector(".field-name-"+this.name+" img.preview-show");
+
+            if (img) {
+                img.field = this;
+                img.removeEventListener("click", this.preview_click);
+                img.addEventListener("click", this.preview_click);
+            }
+            if (btn_change) {
+                btn_change.field = this;
+                btn_change.removeEventListener("click", this.change_click);
+                btn_change.addEventListener("click", this.change_click);
+            }
+            if (btn_restore) {
+                btn_restore.field = this;
+                btn_restore.removeEventListener("click", this.restore_click);
+                btn_restore.addEventListener("click", this.restore_click);
+            }
+            if (btn_delete) {
+                btn_delete.field = this;
+                btn_delete.removeEventListener("click", this.delete_click);
+                btn_delete.addEventListener("click", this.delete_click);
+            }
+        }
+    });
+
+
+
 
 };
 
 BootstrapFormz.prototype.defaultFieldFunctions = function(field) {
     if (!field.init) {
         field.init = function() {
-            this.label = this.label || '';
+            this.label = this.label || "";
+            this.class = this.class || "";
+            this.required = this.required || false;
+            this.name = this.name || 'field_text_'+this.core.randomString(16);
+            this.value = this.value || this.default || "";
+            this.placeholder = this.placeholder || "";
         };
     }
     if (!field.renderField) {
         field.renderField = function() {
             var str = "";
-            str += "<div class=\"form-group\">\n";
-            str += this.formzCore.renderLabel(this);
-            str += this.renderCell(this.formzCore.getColumn(this, 1),{})
-            str += "</div>\n";
+            str += "<div class=\"form-group\">";
+            str += this.core.renderLabel(this);
+            str += this.renderCell(this.core.getColumn(this, 1));
+            str += "</div>";
             return str;
         };
     }
     if (!field.renderCell) {
         field.renderCell = function(cssClass) {
+            var str = "";
+            str += "<div class=\""+cssClass+"\">\n";
+            str += this.renderInput();
+            str += "</div>\n";
+            return str;
         };
     }
     if (!field.renderInput) {
         field.renderInput = function() {
+            return "";
         };
     }
     if (!field.ready) {
@@ -76,45 +526,38 @@ BootstrapFormz.prototype.defaultFieldFunctions = function(field) {
         };
     }
 
+    return field;
 }
 
 
-BootstrapFormz.prototype.getColumn = function(field, num) {
-console.log(this);
-console.log(this.form);
-    if (field.columns && field.columns[num]) return field.columns[num];
-    if (this.form.columns[num]) return this.form.columns[num];
-    if (this.default.columns[num]) return this.columns[num];
-    return '';
-};
 
 
 BootstrapFormz.prototype.defineField = function(name, field) {
-    var formzCore = this;
+    var core = this;
 
     // defines the class
     this.types[name] = function() {
-        this.form = formzCore.form;
-        this.formzCore = formzCore;
+        this.form = core.form;
+        this.core = core;
     };
 
     // define prototype
+    this.defaultFieldFunctions(field);
     this.types[name].prototype = field;
 };
 
 
-BootstrapFormz.prototype.createField = function(name, object) {
+BootstrapFormz.prototype.createField = function(object) {
     
-    if (!this.types[name]) {
+    if (!object.type || !this.types || !this.types[object.type]) {
         return false;
     }
 
-    var field = new this.types[name]();
-    this.defaultFieldFunctions(object);
+    var field = new this.types[object.type]();
     for (var name in object) {
         field[name] = object[name];
     }
-    field.name = field.name || "";
+    if (field.init) field.init();
     field.isInitiated = true;
 
     return field;
@@ -145,7 +588,11 @@ BootstrapFormz.prototype.render = function() {
 
     if (this.form, this.form.fields) {
         for (var t=0; t<this.form.fields.length; t++) {
-            str += this.renderField(this.form.fields[t]);
+            if (this.form.fields[t]) {
+                if (!this.form.fields[t].type) this.form.fields[t].type = "text";
+                this.form.fields[t] = this.createField(this.form.fields[t]);
+                str += this.renderField(this.form.fields[t]);
+            }
         }
     }
 
@@ -157,8 +604,10 @@ BootstrapFormz.prototype.render = function() {
 
 BootstrapFormz.prototype.renderLabel = function(field) {
     var object = {};
-    object.label = field.label || '';
-    object.class = this.getColumn(0)+(' '+field.class || '');
+    object.type = "label";
+    object.value = field.label || "";
+    object.name = field.name || "";
+    object.class = this.getColumn(field, 0)+" control-label";
 
     return this.renderInput(object);
 };
@@ -166,241 +615,26 @@ BootstrapFormz.prototype.renderLabel = function(field) {
 
 BootstrapFormz.prototype.renderField = function(field) {
     
-    if (!field.type) field.type = "text";
-    if (!this.types[field.type]) {
-        return '';
-    }
-    field = this.createField(field.type, field);
-
-    var str = '';
-
-    str = field.renderField(field);
-
-    return str;
-
-/*
-    var required_html = '';
-    var str = '';
-    var selected = '';
-    var columns = (field.columns || this.form.default.columns || ['col-sm-4', 'col-sm-8']);
-
-
-    if (field.type) {
-
-        field.name = field.name || '';
-        field.label = field.label || '';
-        field.value = field.value || '';
-        field.class = field.class || '';
-        field.required = field.required || false;
-        field.placeholder = field.placeholder || '';
-
-
-        if (field.type == 'currency') {
-            field.symbol = field.symbol || '€';
-            str += this.renderInput({
-                    type: 'label', 
-                    value: field.label, 
-                    class: 'control-label '+columns[0],
-                    required: field.required
-                });
-            str += this.renderCell(columns[1], field);
-        } else 
-
-
-        if (field.type == 'text' || field.type == 'password' || field.type == 'file' 
-            || field.type == 'tag' || field.type == 'image' || field.type == 'radio'
-            || field.type == 'select' || field.type == 'button') {
-            str += this.renderInput({
-                    type: 'label',
-                    name: field.name,
-                    value: field.label, 
-                    class: 'control-label '+columns[0],
-                    required: field.required
-                });
-            str += this.renderCell(columns[1], field);
-        } else 
-
-        
-        if (field.type == 'checkbox') {
-            field.text = field.text || '';
-
-            str += this.renderInput({
-                    type: 'label',
-                    name: field.name,
-                    value: field.label, 
-                    class: 'control-label '+columns[0],
-                    required: field.required
-                });
-            str += this.renderCell(columns[1], field);
-        } else 
-
-
-        if (field.type == 'textarea') {
-            field.rows = field.rows || this.form.default.rows || 6;
-
-            str += this.renderInput({
-                    type: 'label',
-                    name: field.name,
-                    value: field.label, 
-                    class: 'control-label '+columns[0],
-                    required: field.required
-                });
-            str += this.renderCell(columns[1], field);
-        } else 
-
-
-        if (field.type == 'empty') {
-        
-        } else 
-
-
-        if (field.type == 'group') {
-
-            if (field.list) {
-                if (typeof field.columns == 'string') {
-                    str += this.renderCell(field.columns, field.list);
-                } else {
-                    for (var t=0; t<field.list.length; t++) {
-                        if (field.columns) {
-                            var col = field.columns[t] || '';
-                        } else {
-                            var col = '';
-                        }
-                        str += this.renderCell(col, field.list[t]);
-                    }
-                }
-            }
-        } else 
-
-
-        if (field.type == 'hidden') {
-            field.name = field.name || '';
-            field.value = field.value || '';
-
-            str += '<input type="hidden" class="hidden" id="'+field.name+'" name="'+field.name+'" value="'+field.value+'"';
-            if (field.disabled) str += ' disabled="disabled"'
-            str += '>'+"\n";
-        } else 
-
-
-        if (field.type == 'email') {
-            field.symbol = field.symbol || '@';
-
-            str += this.renderInput({
-                    type: 'label',
-                    name: field.name,
-                    value: field.label, 
-                    class: 'control-label '+columns[0],
-                    required: field.required
-                });
-            str += this.renderCell(columns[1], field);
-        } else 
-
-
-        if (field.type == 'html') {
-            str += field.html+"\n";
-        }
-
-
-    }
-
-    return str;
-*/
-};
-
-
-
-
-BootstrapFormz.prototype.renderCell = function(clss, field) {
-/*    
-    var str = '';
-
-    if (field.type && field.type == 'label') {
-        field.class = field.class || '';
-        field.class += ' '+clss;
-        clss = '';
-    }
-
-    str += '<div class="' + clss + '">';
+    var str = "";
     if (field) {
-        str += this.renderInput(field);
+        str += field.renderField();
     }
-    str += '</div>';
-
     return str;
-*/
 };
+
+
 
 
 
 BootstrapFormz.prototype.renderInput = function(field) {
+    var str = '';
+    if (!field.isInitiated) {
+        field = this.createField(field);
+    }
+    str += field.renderInput();
+    return str;
 
 /*    
-    var str = '';
-
-    field.name = field.name || '';
-    field.label = field.label || '';
-    field.value = field.value || '';
-    field.class = field.class || '';
-    field.required = field.required || false;
-    field.placeholder = field.placeholder || '';
-
-    if (field.type) {
-
-        if (field.required) {
-            var required_html = '<span class="required">*</span>';
-        } else {
-            var required_html = '';
-        }
-        
-
-        if (field.type == 'currency') {
-            str += '<div class="input-group">'+"\n";
-            str += '<div class="input-group-addon">'+field.symbol+'</div>'+"\n";
-            str += '<input type="text" class="form-control currency '+field.class+'" id="'+field.name+'" placeholder="'+field.placeholder+'" name="'+field.name+'" value="'+field.value+'"';
-            if (field.disabled) str += ' disabled="disabled"'
-            str += '>'+"\n";
-            str += '</div>'+"\n";
-        } else 
-
-        if (field.type == 'label') {
-            str += '<label for="'+field.name+'" class="'+field.class+'">'+field.value+required_html+'</label>';
-        } else 
-
-
-        if (field.type == 'text' || field.type == 'password' || field.type == 'file') {
-            str += '<input type="'+field.type+'" class="form-control '+field.class+' ';
-            if (field.autocomplete) {
-                str += ' autocomplete';
-            }
-            str += '" id="'+field.name+'" placeholder="'+field.placeholder+'" name="'+field.name+'" value="'+field.value+'"';
-            if (field.disabled) str += ' disabled="disabled"'
-            str += '>'+"\n";
-            if (field.autocomplete) {
-                str += '<span class="glyphicon glyphicon-align-justify form-control-feedback" aria-hidden="true"></span>'+"\n";
-                if (!document.formz.data) document.formz.data = {};
-                document.formz.data[field.name] = field.autocomplete;
-            }
-        } else
-
-
-        if (field.type == 'group') {
-            if (field.list) {
-                for (var t=0; t<field.list.length; t++) {
-                    str += this.renderInput(field.list[t]);
-                }
-            }
-        } else 
-
-
-        if (field.type == 'memo') {
-            str += '<textarea class="form-control '+field.class;
-            str += '" id="'+field.name+'" placeholder="'+field.placeholder+'" name="'+field.name+'" ';
-            if (field.disabled) str += ' disabled="disabled"'
-            str += ' rows="'+field.rows+'"';
-            str += '>';
-            str += field.value+'</textarea>'+"\n";
-        } else 
 
 
         if (field.type == 'tag') {
@@ -411,134 +645,7 @@ BootstrapFormz.prototype.renderInput = function(field) {
         } else 
 
 
-        if (field.type == 'email') {
-            str += '<div class="input-group">'+"\n";
-            str += '<div class="input-group-addon">'+field.symbol+'</div>'+"\n";
-            str += '<input type="text" class="form-control email '+field.class+'" id="'+field.name+'" placeholder="'+field.placeholder+'" name="'+field.name+'" value="'+field.value+'"';
-            if (field.disabled) str += ' disabled="disabled"'
-            str += '>'+"\n";
-            str += '</div>'+"\n";
-        } else 
-
-
-        if (field.type == 'checkbox') {
-            str += '<div class="checkbox '+field.class+'">'+"\n";
-            str += '<label>'+"\n";
-            str += '<input type="checkbox" id="'+field.name+'" name="'+field.name+'"';;
-            if (field.disabled) str += ' disabled="disabled"'
-            if (field.value) str += ' checked="checked"'
-            str += '> '+field.text+"\n";
-            str += '</label>'+"\n";
-            str += '</div>'+"\n";
-        } else 
-
-
-        if (field.type == 'image') {
-            if (field.url) {
-                str += '<div class="preview-wrapper">'+"\n";
-                str += '<input type="hidden" class="state" name="'+field.name+'__state" value="" />'+"\n";
-                if (field.preview !== false) {
-                    str += '<img src="'+field.url+'" class="img-rounded preview preview-show '+field.class+'" />'+"\n";
-                } else {
-                    str += '<img src="'+field.url+'" class="img-rounded preview '+field.class+'" />'+"\n";
-                }
-                str += '<div class="feedback"></div>'+"\n";
-                if (field.change !== false) str += '<button type="button" class="btn btn-info change">Change</button>'+"\n";
-                if (field.delete !== false) str += '<button type="button" class="btn btn-danger delete">Delete</button>'+"\n";
-                if (field.delete !== false) str += '<button type="button" class="btn btn-warning hidden restore">Restore</button>'+"\n";
-//                    str += '<input type="hidden" name="'+field.name+'" value="'+field.value+'" data-original="'+field.value+'" />'+"\n";
-                if (field.change !== false) {
-                    str += '<input type="file" class="form-control hidden" id="'+field.name+'_newfile" placeholder="'+field.placeholder+'" name="'+field.name+'" value="'+field.value+'"';
-                    if (field.disabled) str += ' disabled="disabled"'
-                    str += '>'+"\n";
-                }
-                str += '</div>'+"\n";
-            } else {
-                str += '<input type="file" class="form-control';
-                str += '" id="'+field.name+'" placeholder="'+field.placeholder+'" name="'+field.name+'" value="'+field.value+'"';
-                if (field.disabled) str += ' disabled="disabled"'
-                str += '>'+"\n";
-            }
-        } else
-
-        
-        if (field.type == 'textarea') {
-            str += '<textarea class="form-control '+field.class;
-            str += '" id="'+field.name+'" placeholder="'+field.placeholder+'" name="'+field.name+'" ';
-            if (field.disabled) str += ' disabled="disabled"'
-            var rows = (field.rows || this.form.default.rows || 6);
-            str += ' rows="'+rows+'"';
-            str += '>';
-            str += field.value+'</textarea>'+"\n";
-        } else 
-
-
-        if (field.type == 'radio') {
-            for (var t=0; t<field.options.length; t++) {
-                str += '<label class="radio-inline '+field.class+'">'+"\n";
-                // <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                var arr = field.options[t].split('|');
-                var value = arr[0];
-                if (arr[1]) {
-                    var text = arr[1];
-                } else {
-                    var text = value;
-                }
-                if (value == field.value) {
-                    selected = 'checked';
-                } else {
-                    selected = '';
-                }
-                str += '<input type="radio" name="'+field.name+'" id="'+field.name+'" value="'+value+'"';
-                if (selected) str += ' '+selected;
-                if (field.change) str += ' ng-change="'+field.change+'"'
-                if (field.disabled) str += ' disabled="disabled"'
-                str += '>'+"\n";
-                str += text;
-                str += '</label>'+"\n";
-            }
-        } else 
-
-        if (field.type == 'button') {
-            str += '<button class="btn ';
-            str += field.class;
-            str += '" id="'+field.name+'" name="'+field.name+'" ';
-            if (field.disabled) str += ' disabled="disabled"'
-            str += '>';
-            str += field.value+'</button>'+"\n";
-        } else 
-
-        if (field.type == 'select') {
-            str += '<select class="form-control '+field.class+'" id="'+field.name+'" placeholder="'+field.placeholder+'" name="'+field.name+'"';
-            if (field.multiple) str += ' multiple'
-            if (field.disabled) str += ' disabled'
-            if (field.rows) str += ' size="'+field.rows+'"'
-            str += '> '+field.label+"\n";
-            if (field.options) {
-                var selected = '';
-                for (var u=0; u<field.options.length; u++) {
-                    var arr = field.options[u].split('|');
-                    if (arr.length == 1) {
-                        
-                        if (field.value == field.options[u] || field.value.indexOf(field.options[u]) != -1) {
-                            selected = 'selected';
-                        } else {
-                            selected = '';
-                        }
-                        str += '<option value="'+field.options[u]+'" '+selected+'>'+field.options[u]+'</option>'+"\n";
-                    } else {
-                        if (field.value == arr[0] || field.value.indexOf(arr[0]) != -1) {
-                            selected = 'selected';
-                        } else {
-                            selected = '';
-                        }
-                        str += '<option value="'+arr[0]+'" '+selected+'>'+arr[1]+'</option>'+"\n";
-                    }
-                }
-            }
-            str += '</select>'+"\n";
-        }
-
+      
     } else if (Object.prototype.toString.call(field) === '[object Array]') {
         for (var t=0; t<field.length; t++) {
             str += this.renderInput(field[t]);
@@ -555,6 +662,7 @@ BootstrapFormz.prototype.renderInput = function(field) {
     General functions
 *************************************************************/
 
+
 BootstrapFormz.prototype.randomString = function(length) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'.split('');
 
@@ -569,6 +677,48 @@ BootstrapFormz.prototype.randomString = function(length) {
     return str;
 };
 
+BootstrapFormz.prototype.isString = function(object) {
+    return (typeof object === "string");
+};
+
+BootstrapFormz.prototype.isArray = function(object) {
+    return Object.prototype.toString.call(object) === "[object Array]";
+};
+
+BootstrapFormz.prototype.isObject = function(object) {
+    return object !== null && typeof object === "object";
+};
+
+BootstrapFormz.prototype.getColumn = function(field, num) {
+    if (field.columns && this.isString(field.columns)) return field.columns;
+    if (field.columns && field.columns[num]) return field.columns[num];
+    if (this.form && this.form.columns && this.form.columns[num]) return this.form.columns[num];
+    if (this.default && this.default.columns && this.default.columns[num]) return this.default.columns[num];
+    return '';
+};
+
+BootstrapFormz.prototype.xtrim = function(str) {
+    return (str + '').replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, '').replace(/\s+/g, ' ');
+};
+
+BootstrapFormz.prototype.hasClass = function(element, classname) {
+    if (!element.className || !element.className.indexOf) return false;
+    return element.className.indexOf(classname) != -1;
+};
+
+BootstrapFormz.prototype.addClass = function(element, classname) {
+    if (!element.className) return this;
+    if (this.hasClass(element, classname)) return this;
+    element.className = this.xtrim(element.className+" "+classname);
+    return this;
+};
+
+BootstrapFormz.prototype.removeClass = function(element, classname) {
+    if (!element.className) return this;
+    element.className = this.xtrim(element.className.replace(classname, ''));
+    return this;
+};
+
 
 
 /*************************************************************
@@ -576,13 +726,13 @@ BootstrapFormz.prototype.randomString = function(length) {
 *************************************************************/
 
 
-
-
-
-
-
-
 BootstrapFormz.prototype.ready = function() {
+    if (this.form && this.form.fields && this.form.fields.length) {
+        for (var t=0; t<this.form.fields.length; t++) {
+            if (this.form.fields[t] && this.form.fields[t].ready) this.form.fields[t].ready();
+        }
+    }
+/*
     $(function() {
 
         /////////////////////////////////////////////////////////////////////
@@ -601,152 +751,13 @@ BootstrapFormz.prototype.ready = function() {
             } 
         }
 
-        /////////////////////////////////////////////////////////////////////
-        // image
-        
-        var divs = $(".preview-wrapper");
-
-
-        function image_show(img) {
-
-            if (!img) {
-                $('.image-show-preview').remove();
-                return;
-            }
-
-            var s = '<div class="image-show-preview">' 
-                + '<div class="content">'
-                + '<div class="close"></div>'
-                + '<div class="image"><center><img src="'+$(img).attr('src')+'" /></center></div>'
-                +'</div>'
-                + '<div class="overlay"></div>'
-                + '</div>';
-            $(document).find('body').append(s);
-
-            $('.image-show-preview').click(function() {
-                image_show(false);
-            });
-        }
-
-        function image_state(div, state, b) {
-            if (b) {
-                $(div).parent().find('input.state').val(state);
-            } else {
-                $(div).parent().find('input.state').val('');
-            }
-
-            if (b) {
-                $(div).parent().find('input.image_state').val(state);
-            } else {
-                $(div).parent().find('input.image_state').val('');
-            }
-            if (state == 'change') {
-                $(div).parent().removeClass('deleted');
-                $(div).parent().find('button.delete').removeClass('hidden');
-                $(div).parent().find('button.restore').addClass('hidden');
-
-                if (b) {
-                    $(div).parent().find('input[type=file]').removeClass('hidden');
-                } else {
-                    var input = $(div).parent().find('input[type=file]');
-                    $(input).attr('value', '');
-                    $(input).attr('type', '');
-                    $(input).attr('type', 'file');
-                    $(input).addClass('hidden');
-                }
-            } else if (state == 'delete') {
-                var input = $(div).parent().find('input[type=file]');
-                $(input).attr('value', '');
-                $(input).attr('type', '');
-                $(input).attr('type', 'file');
-                $(input).addClass('hidden');
-
-                if (b) {
-                    $(div).parent().addClass('deleted');
-                    $(div).parent().find('button.restore').removeClass('hidden');
-                    $(div).parent().find('button.delete').addClass('hidden');
-                } else {
-                    $(div).parent().removeClass('deleted');
-                    $(div).parent().find('button.delete').removeClass('hidden');
-                    $(div).parent().find('button.restore').addClass('hidden');
-                }
-            }
-        }
-
-        function image_click_change(event) {
-
-        }
-
-        function image_click_delete(event) {
-
-        }
-
-        function image_click_restore(event) {
-
-        }
-
-        function image_click_preview(event) {
-            image_show(event.target);
-        }
-
-        // remove the click events
-        $("body").off( "click", "button.change", image_click_change);
-        $("body").off( "click", "button.restore", image_click_restore);
-        $("body").off( "click", "button.delete", image_click_delete);
-        $("body").off( "click", "button.preview-show", image_click_change);
-
-        for (var t=0; t<divs.length; t++) {
-            //var name = $(inputs[t]).attr('name');
-            $(divs[t]).find('button.change').click(function(event) {
-                if ($(event.target).parent().find('input[type=file]').hasClass('hidden')) {
-                    image_state($(event.target), 'change', true);
-                } else {
-                    image_state($(event.target), 'change', false);
-                }
-            });
-
-            $(divs[t]).find('button.delete').click(function(event) {
-                image_state($(event.target), 'delete', true);
-            });
-
-            $(divs[t]).find('button.restore').click(function(event) {
-                image_state($(event.target), 'delete', false);
-            });
-
-            $(divs[t]).find('img.preview-show').click(function(event) {
-            });
-        }
-
 
         /////////////////////////////////////////////////////////////////////
-        // currency
-
-        var inputs = $(".currency");
-
-        for (var t=0; t<inputs.length; t++) {
-            var name = $(inputs[t]).attr('name');
-            $(inputs[t]).change(function() {
-                currency_validate(this);
-            });
-            currency_validate(inputs[t]);
-        }
-
-        function currency_validate(input) {
-            var value = $(input).val()+'';
-            value = value.replace(/\s/gm,'').replace(/[a-zA-Z]/gm,'').replace(/\,/gm,'.');
-            if (value.indexOf('.') == -1) value += '.';
-            value += '00';
-            value = parseFloat(value).toFixed(2);
-            $(input).val(value);
-        }
-
-
-        /////////////////////////////////////////////////////////////////////
-        // input 
+        // input  tag
 
         //$("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
 
     });
-
+*/
 };
 
