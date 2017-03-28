@@ -34,6 +34,7 @@
 
 	var data = {
 		columns: ["col-sm-4", "col-sm-8"],
+		validate
 		fields: [
 			{
 				name: "text",
@@ -97,6 +98,13 @@
 				label: "Textarea",
 				type: "textarea",
 				value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+			},
+			{
+				name: "select",
+				label: "Select a number",
+				type: "select",
+				options: ["One", "Two", "Three", "Four"],
+				rows: 5
 			},
 			{
 				name: "button",
@@ -218,19 +226,24 @@
 					}
 				]
 			},
-			[
-				{
-					type: "label",
-					value: "Inline from an array"
-				},
-				{
-					type: "text"
-				},
-				{
-					type: "button",
-					value: "Send"
-				}
-			],
+			{
+				type: "inline",
+				columns: "col-sm-12",
+				list: 
+				[
+					{
+						type: "label",
+						value: "Inline from an array"
+					},
+					{
+						type: "text"
+					},
+					{
+						type: "button",
+						value: "Send"
+					}
+				]
+			},
 			{
 				type: "cell",
 				columns: ['col-sm-4', 'col-sm-2', 'col-sm-2', 'col-sm-2'],
