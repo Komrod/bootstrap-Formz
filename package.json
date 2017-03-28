@@ -1,7 +1,8 @@
 {
   "name": "bootstrap-formz",
   "version": "0.1.0",
-  "description": "Bootstrap form helper.",
+  "description": "Bootstrap build form helper",
+  ",
   "main": "index.js",
   "directories": {
     "test": "test"
