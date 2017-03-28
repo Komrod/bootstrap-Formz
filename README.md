@@ -1,24 +1,25 @@
 
-# bootstrap-Formz
+# Bootstrap-Formz
 
-Bootstrap form helper.
+Bootstrap form build helper.
 
-This javascript class take an object and build a Bootstrap form.
+This javascript class takes a simple object and builds Bootstrap form HTML.
 - Required: the bootstrap CSS. 
 - Not required: no need to use jQuery or bootstrap JS.
 
 There is usually 2 columns: the label and the input field.
 
 *Features*
-- Many fields: text, password, select, checkbox, radio, file, textarea, button, label
-- Additionnal special fields: image, email, currency, inline, column
-- Customizable columns, init and ready functions and input classes
-- Define your own field for more behavior change
+- Basic fields: text, password, select, checkbox, radio, file, textarea, button, label
+- Special fields: image, email, currency, inline, column
+- Customizable column classes, init and ready functions and input classes
+- Define your own field for more behaviors
 
 
 ## Quick start
 
 ```
+// create the form
 var form = new BootstrapFormz({
 	name: "myform",
 	fields: [
@@ -27,8 +28,15 @@ var form = new BootstrapFormz({
 		{ type: "button", label: "Submit" }
 	]
 });
-document.write(form.render());
+
+// just call render() on the Formz object and get the HTML
+var html = form.render();
+
+// Then just write it to the document or whatever you want
+document.write(html);
 ```
+
+
 This will create an horizontal form with a login, password and button. There are many field types and many options you can use to customize your form.
 
 For example, you can change the default column classes for the all form or on a particular field.
@@ -551,7 +559,7 @@ document.write(form.render());
 
 ### Image
 
-An input to show and modify an image
+An field to show and modify an image
 
 *Parameters*:
 - label: text on the label column (default empty)
@@ -559,7 +567,7 @@ An input to show and modify an image
 - url: the URL of the image, if omitted this field only shows a file input (default undefined)
 - columns: string or array of the column classes to use (default form columns)
 - required: boolean, if true it puts an asterisk after the label (default false)
-- preview_click : custom function for preview click (default a quick preview function)
+- preview_click : custom function for full preview (default is a quick preview function)
 - preview: if false, no full preview on the image (default undefined)
 - change: if false, no change button (default undefined)
 - delete: if false, no delete / restore button (default undefined)
@@ -606,9 +614,69 @@ document.write(form.render());
 
 ### Initialization
 
+Each field have a init function that is called when the field is initiated. This function would normally set the default values of variables if not set. But if you change the function, it can do other things.
+When the init function is called, the form HTML is generating so the input is not yet on the page.
+
+```
+var form = new BootstrapFormz({
+	fields: [
+		{
+			type: "text",
+			label: "Your text",
+			name: "mytext",
+			value: "",
+			init: function() {
+				// this.super.init();
+				alert('text input initiated');
+			}
+		}
+	]
+});
+document.write(form.render());
+```
+
 ### Ready
 
+Each field have a ready function that is called when DOM is ready or the formz.ready() function is called. If you ouput the form on your document, the function can access the input if you
+
+```
+var form = new BootstrapFormz({
+	fields: [
+		{
+			type: "text",
+			label: "Your text",
+			name: "mytext",
+			value: "",
+			init: function() {
+				// this.super.init();
+				alert('text input initiated');
+			}
+		}
+	]
+});
+document.write(form.render());
+```
+
 ### Image full preview
+
+You can replace the full preview open function to put your own.
+
+```
+var form = new BootstrapFormz({
+	fields: [
+		{
+			type: "image",
+			label: "An image",
+			name: "myimage",
+			url: "image/yourmom.png",
+			preview_click: function() {
+				alert('custom full image preview');
+			}
+		}
+	]
+});
+document.write(form.render());
+```
 
 ## Examples
 
@@ -628,10 +696,13 @@ document.write(form.render());
 ## TODO
 
 - Change default checkbox value to "1"
+- disabled and readonly properties
 - Add precision to currency
 - Add number type field
-- Make a doc
+- Finish the doc
 - Add ids to fields
-- Call super function to call the previous function
-- field function: change() click() keyup() keydown()
-- disable email field correct detection
+- Call super function to call the parent function
+- Field function: change() click() keyup() keydown() validate()
+- Form function submit()
+- Disable email correct value detection
+- Change preview_click() to preview() on field image
