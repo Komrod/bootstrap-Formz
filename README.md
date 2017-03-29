@@ -7,9 +7,7 @@ This javascript class takes a simple object and builds Bootstrap form HTML.
 - Required: the bootstrap CSS. 
 - Not required: no need to use jQuery or bootstrap JS.
 
-There is usually 2 columns: the label and the input field.
-
-*Features*
+*Features*:
 - Basic fields: text, password, select, checkbox, radio, file, textarea, button, label
 - Special fields: image, email, currency, inline, column
 - Customizable column classes, init and ready functions and input classes
@@ -17,6 +15,8 @@ There is usually 2 columns: the label and the input field.
 
 
 ## Quick start
+
+There is usually 2 columns: the label and the input field.
 
 ```
 // create the form
@@ -32,14 +32,14 @@ var form = new BootstrapFormz({
 // just call render() on the Formz object and get the HTML
 var html = form.render();
 
-// Then just write it to the document or whatever you want
+// Then just write it to the document or do whatever you want
 document.write(html);
 ```
 
 
 This will create an horizontal form with a login, password and button. There are many field types and many options you can use to customize your form.
 
-For example, you can change the default column classes for the all form or on a particular field.
+For example, you can change the default column classes for the whole form or on a particular field.
 ```
 var form = new BootstrapFormz({
 	name: "myform",
@@ -706,3 +706,4 @@ document.write(form.render());
 - Form function submit()
 - Disable email correct value detection
 - Change preview_click() to preview() on field image
+- Check default input names
