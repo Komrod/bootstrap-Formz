@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+
+<head>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../src/bootstrap-formz.css">
+	<script type="text/javascript" src="../src/bootstrap-formz.js"></script>
+
+	<style>
+		h2 {
+			color: #666;
+			margin-top: 6px;
+		}
+		.row {
+			border-radius: 12px;
+			background-color: #f0f0f3;
+			border: 2px solid #333;
+			padding: 10px;
+			margin-top: 24px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		
+		<h1>Bootstrap Formz example</h1>
+
+		<div class="row">
+			<h2>Text inputs</h1>
+			<div class="col-sm-12">
+<script>
+	var data = {
+		default: {
+			columns: ["col-sm-4", "col-sm-8"]
+		},
+		fields: [
+			{
+				name: "text01",
+				label: "Simple input text",
+				type: "text"
+			},
+			{
+				name: "text02",
+				type: "text",
+				value: "No label"
+			},
+			{
+				label: "No initial name",
+				type: "text"
+			},
+			{
+				name: "text04",
+				label: "Input text disabled",
+				type: "text",
+				value: "You can't change this text",
+				disabled: true
+			},
+			{
+				name: "text05",
+				label: "Input text read only",
+				value: "You can't change this text",
+				type: "text",
+				readonly: true
+			},
+			{
+				name: "text06",
+				label: "Input text with placeholder",
+				type: "text",
+				placeholder: "This is a placeholder text"
+			},
+			{
+				name: "text07",
+				type: "text",
+				value: "columns as string",
+				columns: "col-sm-3"
+			},
+			{
+				name: "text08",
+				label: "Columns as array",
+				type: "text",
+				columns: ["col-sm-6", "col-sm-3"]
+			},
+			{
+				name: "text09",
+				label: "Change class",
+				type: "text",
+				value: "Input is now large",
+				class: "btn-lg"
+			},
+			{
+				name: "text10",
+				label: "With required",
+				type: "text",
+				required: true
+			},
+			{
+				name: "text11",
+				label: "Init function",
+				type: "text",
+				value: "",
+				init: function() {
+					this.value = "Value changed";
+				}
+			},
+			{
+				name: "text12",
+				label: "Ready function",
+				type: "text",
+				value: "",
+				ready: function(input) {
+					if (input) input.value = "Value changed";
+				}
+			},
+		]
+	};
+
+	var formz = new BootstrapFormz(data);
+	document.write(formz.render());
+</script>
+			</div>
+		</div>
+
+
+
+	</div>
+</body>
+</html>
